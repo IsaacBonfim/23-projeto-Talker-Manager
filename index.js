@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const talkerManager = require('./talker');
+const listTalkers = require('./talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (req, res) => {
-  const response = await talkerManager();
+  const response = await listTalkers();
   const talkers = JSON.parse(response);
 
   res.status(200).json(talkers);
@@ -24,7 +24,7 @@ app.get('/talker', async (req, res) => {
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
 
-  const response = JSON.parse(await talkerManager());
+  const response = JSON.parse(await listTalkers());
   const selectedTalker = response.find((talker) => talker.id === Number(id));
   
   if (!selectedTalker) {
