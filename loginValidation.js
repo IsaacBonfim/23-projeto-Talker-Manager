@@ -8,7 +8,7 @@ function emailValidation(req, res, next) {
       .json({ message: 'O campo "email" é obrigatório' });
   }
 
-  if (validation.test(email)) {
+  if (!validation.test(email)) {
     return res.status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
