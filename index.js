@@ -1,9 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { promises } = require('fs');
 
 const listTalkers = require('./talker');
 const getToken = require('./createToken');
+const tokenValidation = require('./tokenValidation');
 const { emailValidation, passwordValidation } = require('./loginValidation');
+const { nameValidation, ageValidation, talkValidation,
+  watchDateValidation } = require('./talkerValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -43,7 +47,24 @@ app.post('/login',
     res.status(200).json({ token: getToken() });
 });
 
-app.post('/talker');
+app.use(tokenValidation);
+
+app.post('/talker',
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchDateValidation,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const list = JSON.parse(await listTalkers());
+    const id = list.length + 1;
+
+    list.push({ id, name, age, talk });
+
+    await promises.writeFile('./talker.json', JSON.stringify(list));
+
+    res.status(201).json({ id, name, age, talk });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
