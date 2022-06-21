@@ -15,8 +15,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (req, res) => {
-  const response = await listTalkers();
-  const talkers = JSON.parse(response);
+  const talkers = JSON.parse(await listTalkers());
 
   res.status(200).json(talkers);
 });
