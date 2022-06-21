@@ -43,6 +43,8 @@ app.post('/login',
     res.status(200).json({ token: getToken() });
 });
 
+app.post('/talker');
+
 app.listen(PORT, () => {
   console.log('Online');
 });
