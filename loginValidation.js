@@ -24,7 +24,7 @@ function passwordValidation(req, res, next) {
       .json({ message: 'O campo "password" é obrigatório' });
   }
 
-  if (password.lenghth < 6) {
+  if (password.toString().lenghth < 6) {
     return res.status(400)
       .json({ message: 'O  "password" deve ter pelo menos 6 caracteres' });
   }
