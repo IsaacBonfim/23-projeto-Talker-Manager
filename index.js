@@ -7,7 +7,7 @@ const getToken = require('./createToken');
 const tokenValidation = require('./tokenValidation');
 const { emailValidation, passwordValidation } = require('./loginValidation');
 const { nameValidation, ageValidation, talkValidation,
-  watchDateValidation } = require('./talkerValidation');
+  rateValidation, watchDateValidation } = require('./talkerValidation');
 
 const app = express();
 app.use(bodyParser.json());
@@ -53,6 +53,7 @@ app.post('/talker',
   nameValidation,
   ageValidation,
   talkValidation,
+  rateValidation,
   watchDateValidation,
   async (req, res) => {
     const { name, age, talk } = req.body;
@@ -64,6 +65,26 @@ app.post('/talker',
     await promises.writeFile('./talker.json', JSON.stringify(list));
 
     res.status(201).json({ id, name, age, talk });
+});
+
+app.put('/talker/:id',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  rateValidation,
+  watchDateValidation,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const list = JSON.parse(await listTalkers());
+    const index = list.findIndex((talker) => talker.id === Number(id));
+
+    list[index] = { ...list[index], name, age, talk };
+
+    await promises.writeFile('./talker.json', JSON.stringify(list));
+
+    res.status(200).json({ id: Number(id), name, age, talk });
 });
 
 app.listen(PORT, () => {

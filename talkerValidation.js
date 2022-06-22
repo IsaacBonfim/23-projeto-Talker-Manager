@@ -36,10 +36,14 @@ function talkValidation(req, res, next) {
   if (!talk) {
     return res.status(400).json({ message: 'O campo "talk" é obrigatório' });
   }
-  
-  const { rate } = talk;
 
-  if (!rate) {
+  next();
+}
+
+function rateValidation(req, res, next) {
+  const { rate } = req.body.talk;
+
+  if (!rate && rate !== 0) {
     return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
   }
 
@@ -71,5 +75,6 @@ module.exports = {
   nameValidation,
   ageValidation,
   talkValidation,
+  rateValidation,
   watchDateValidation,
 };
