@@ -87,6 +87,21 @@ app.put('/talker/:id',
     res.status(200).json({ id: Number(id), name, age, talk });
 });
 
+app.delete('/talker/:id',
+  tokenValidation,
+
+  async (req, res) => {
+    const { id } = req.params;
+    const list = JSON.parse(await listTalkers());
+    const index = list.findIndex((talker) => talker.id === Number(id));
+
+    list.splice(index, 1);
+
+    await promises.writeFile('./talker.json', JSON.stringify(list));
+
+    res.status(204).end();
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
